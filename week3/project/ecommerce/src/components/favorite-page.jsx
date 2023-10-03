@@ -1,30 +1,49 @@
-
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FavoriteContext } from './favorites-context';
 
-function FavoritePage() {
-  
-  const { favoriteIds} = useContext(FavoriteContext);
-  const [favoriteProduct, setFavoriteProduct] = useState(null);
+function FavoritesPage() {
+  const { favoriteIds } = useContext(FavoriteContext);
+  const [favoriteProducts, setFavoriteProducts] = useState([]);
 
-  useEffect(() => { 
-    fetch(`https://fakestoreapi.com/products/${id}`)
-      .then((response) => response.json())
-      .then((data) => setProduct(data))
-      .catch((error) => console.error('Error fetching product:', error));
-  }, [id]);
 
-  if (!product) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    
+    const fetchFavoriteProducts = async () => {
+      const productDetails = [];
+
+      for (const productId of favoriteIds) {
+        try {
+          const response = await fetch(`https://fakestoreapi.com/products/${productId}`);
+          if (response.ok) {
+            const productData = await response.json();
+            productDetails.push(productData);
+          }
+        } catch (error) {
+          console.error(`Error fetching product details for ID ${productId}:`, error);
+        }
+      }
+
+      setFavoriteProducts(productDetails);
+      console.log(productDetails)
+    };
+
+    fetchFavoriteProducts();
+  }, [favoriteIds]);
 
   return (
-    <div className="product-detail">
-      <h2>{product.title}</h2>
-      <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
+    <div className='favorites'>
+      <h1>Favorites</h1>
+      <ul>
+        {favoriteProducts.map((product) => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title} />
+            <h2>{product.title}</h2>
+            <h3>{product.price} $</h3>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-export default ProductDetail;
+export default FavoritesPage;

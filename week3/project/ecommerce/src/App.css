@@ -94,3 +94,26 @@
 .product-detail p{
   font-size: 25px;
 }
+
+.favorites{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.favorites h1{
+  font-size: 80px;
+}
+
+nav ul{
+  display: flex;
+  justify-content: space-around;
+  font-size: 30px;
+  list-style: none;
+}
+
+.nav-link{
+  text-decoration: none;
+  font-weight: bold;
+  color: rgb(47, 16, 16);
+}
